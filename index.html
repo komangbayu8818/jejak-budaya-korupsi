@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jejak Budaya di Era Digital — Warisan Korupsi</title>
+  <meta name="description" content="Menelusuri jejak korupsi dari zaman kerajaan, VOC, hingga era digital. Sebuah kritik yang membara.">
+
+  <!-- Font dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (versi CDN, tanpa instalasi) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Warna & font khusus tema "membara"
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bara:   '#ff4d1a',  // oranye api
+            emas:   '#ffb347',  // kuning api
+            darah:  '#b91c1c',  // merah tua
+            arang:  '#15100e',  // hitam arang
+            abu:    '#0b0807',  // latar paling gelap
+            debu:   '#2a201c',  // garis & border
+            kertas: '#f5ede6'   // putih tulang
+          },
+          fontFamily: {
+            judul: ['Anton', 'sans-serif'],
+            isi:   ['"Space Grotesk"', 'sans-serif'],
+            ketik: ['"Special Elite"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="grain bg-abu text-kertas font-isi antialiased overflow-x-hidden">
+
+  <!-- Filter "hawa panas": membuat teks bergelombang seperti di atas api -->
+  <svg class="absolute w-0 h-0" aria-hidden="true">
+    <filter id="hawa-panas">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.06" numOctaves="2" seed="3">
+        <animate attributeName="baseFrequency" dur="5s" values="0.012 0.06;0.016 0.09;0.012 0.06" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <!-- =====================================================
+       1. LOADER — layar pembuka
+       ===================================================== -->
+  <div id="loader" class="fixed inset-0 z-[100] bg-abu flex flex-col items-center justify-center px-6">
+    <p class="font-ketik text-bara text-sm tracking-[.3em] mb-4">ARSIP NEGARA · RAHASIA</p>
+    <p id="loader-teks" class="font-judul text-4xl md:text-6xl uppercase text-center">Membuka berkas...</p>
+    <div class="w-64 h-1 bg-debu mt-8 overflow-hidden rounded">
+      <div id="loader-bar" class="h-full w-0 bg-gradient-to-r from-emas via-bara to-darah"></div>
+    </div>
+    <p id="loader-angka" class="font-ketik text-kertas/50 mt-3 text-sm">0%</p>
+    <!-- Muncul kalau browser memblokir musik otomatis: satu klik = masuk + lagu menyala -->
+    <button id="tombol-masuk" type="button" class="hidden denyut mt-10 bg-kertas text-abu font-bold uppercase tracking-widest px-10 py-4 rounded-full border-2 border-abu hover:bg-emas hover:scale-105 transition-all">
+      🔥 Buka Arsip
+    </button>
+    <p id="catatan-masuk" class="hidden mt-4 text-xs text-kertas/50">🔊 Nyalakan suara — website ini punya lagu latar</p>
+  </div>
+
+  <!-- Garis progres scroll di paling atas -->
+  <div id="progres-scroll" class="fixed top-0 left-0 h-1 w-0 z-[70] bg-gradient-to-r from-emas via-bara to-darah"></div>
+
+  <!-- Cahaya yang mengikuti kursor (desktop) -->
+  <div id="cahaya-kursor" class="hidden md:block"></div>
+
+  <!-- =====================================================
+       2. NAVBAR
+       ===================================================== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
+    <nav class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+      <a href="#beranda" class="flex items-center gap-2 group">
+        <span class="text-2xl group-hover:scale-125 group-hover:rotate-12 transition-transform">🔥</span>
+        <span class="font-judul text-2xl tracking-wide">JEJAK<span class="text-bara">.</span></span>
+      </a>
+
+      <ul class="hidden lg:flex items-center gap-8 text-sm uppercase tracking-widest">
+        <li><a href="#manifesto" class="link-nav relative py-2 hover:text-bara transition-colors">Manifesto</a></li>
+        <li><a href="#linimasa"  class="link-nav relative py-2 hover:text-bara transition-colors">Linimasa</a></li>
+        <li><a href="#angka"     class="link-nav relative py-2 hover:text-bara transition-colors">Angka</a></li>
+        <li><a href="#satir"     class="link-nav relative py-2 hover:text-bara transition-colors">Satir</a></li>
+        <li><a href="#dulu-kini" class="link-nav relative py-2 hover:text-bara transition-colors">Dulu &amp; Kini</a></li>
+        <li><a href="#kalkulator" class="link-nav relative py-2 hover:text-bara transition-colors">Kalkulator</a></li>
+        <li><a href="#kuis"      class="link-nav relative py-2 hover:text-bara transition-colors">Kuis</a></li>
+      </ul>
+
+      <a href="#bertindak" class="hidden lg:inline-block bg-bara text-abu font-bold uppercase text-sm tracking-widest px-5 py-3 rounded-full hover:bg-emas hover:scale-105 transition-all">
+        Bertindak
+      </a>
+
+      <!-- Tombol menu HP -->
+      <button id="tombol-menu" class="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5" aria-label="Buka menu">
+        <span class="garis-menu block w-7 h-0.5 bg-kertas transition-all duration-300"></span>
+        <span class="garis-menu block w-7 h-0.5 bg-kertas transition-all duration-300"></span>
+        <span class="garis-menu block w-7 h-0.5 bg-kertas transition-all duration-300"></span>
+      </button>
+    </nav>
+
+    <!-- Menu HP -->
+    <div id="menu-hp" class="lg:hidden fixed inset-0 top-20 bg-abu/95 backdrop-blur-md flex flex-col items-center justify-center gap-6 opacity-0 pointer-events-none transition-opacity duration-300">
+      <a href="#manifesto"  class="link-hp font-judul text-4xl uppercase hover:text-bara">Manifesto</a>
+      <a href="#linimasa"   class="link-hp font-judul text-4xl uppercase hover:text-bara">Linimasa</a>
+      <a href="#angka"      class="link-hp font-judul text-4xl uppercase hover:text-bara">Angka</a>
+      <a href="#satir"      class="link-hp font-judul text-4xl uppercase hover:text-bara">Satir</a>
+      <a href="#dulu-kini"  class="link-hp font-judul text-4xl uppercase hover:text-bara">Dulu &amp; Kini</a>
+      <a href="#kalkulator" class="link-hp font-judul text-4xl uppercase hover:text-bara">Kalkulator</a>
+      <a href="#kuis"       class="link-hp font-judul text-4xl uppercase hover:text-bara">Kuis</a>
+      <a href="#bertindak"  class="link-hp font-judul text-4xl uppercase text-bara">Bertindak</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- =====================================================
+         3. HERO
+         ===================================================== -->
+    <section id="beranda" class="relative min-h-screen flex items-center overflow-hidden">
+      <!-- Kanvas bara api beterbangan -->
+      <canvas id="kanvas-bara" class="absolute inset-0 w-full h-full"></canvas>
+      <!-- Cahaya api dari bawah -->
+      <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-darah/40 via-bara/10 to-transparent pointer-events-none"></div>
+      <!-- Api kebakaran (digambar oleh script.js) -->
+      <canvas class="kanvas-api absolute inset-x-0 bottom-0 w-full h-[55%] pointer-events-none" data-tinggi="0.75"></canvas>
+      <!-- Cahaya api yang berkedip di seluruh layar -->
+      <div class="cahaya-api absolute inset-0 pointer-events-none"></div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-5 md:px-8 pt-28 pb-32 w-full">
+        <p class="hero-muncul font-ketik text-bara tracking-[.3em] text-xs md:text-sm mb-6">
+          // JEJAK BUDAYA DI ERA DIGITAL
+        </p>
+
+        <h1 class="hawa-panas font-judul uppercase leading-[.9] text-[15vw] md:text-[9vw] lg:text-[8.5rem]">
+          <span class="hero-muncul block">Korupsi bukan</span>
+          <span class="hero-muncul block">budaya.</span>
+          <span class="hero-muncul block text-[11vw] md:text-[6.5vw] lg:text-[6rem] mt-2">
+            Tapi ia <span class="glitch teks-api" data-text="diwariskan.">diwariskan.</span>
+          </span>
+        </h1>
+
+        <p class="hero-muncul mt-8 [text-shadow:0_2px_12px_#000] text-lg md:text-2xl max-w-2xl text-kertas/80 min-h-[4rem]">
+          Dari <span id="ketik" class="kursor text-emas font-bold"></span>
+        </p>
+
+        <div class="hero-muncul mt-10 flex flex-wrap gap-4">
+          <a href="#linimasa" class="denyut group inline-flex items-center gap-3 bg-kertas text-abu font-bold uppercase tracking-widest px-8 py-4 rounded-full border-2 border-abu shadow-[0_8px_30px_rgba(0,0,0,.7)] hover:bg-emas transition-colors">
+            Telusuri Jejaknya
+            <span class="group-hover:translate-x-2 transition-transform">→</span>
+          </a>
+          <a href="#kuis" class="inline-flex items-center gap-3 bg-abu/85 backdrop-blur-md text-kertas font-bold border-2 border-kertas/80 uppercase tracking-widest px-8 py-4 rounded-full shadow-[0_8px_30px_rgba(0,0,0,.7)] hover:bg-abu hover:border-emas hover:text-emas transition-colors">
+            Uji Kepekaanmu
+          </a>
+        </div>
+      </div>
+
+      <a href="#manifesto" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-kertas/50 hover:text-bara transition-colors">
+        <span class="text-xs uppercase tracking-[.3em]">Gulir</span>
+        <span class="melayang text-2xl">↓</span>
+      </a>
+    </section>
+
+    <!-- =====================================================
+         4. MARQUEE — teks berjalan
+         ===================================================== -->
+    <div class="marquee overflow-hidden bg-bara text-abu py-4 -rotate-1 scale-105 border-y-4 border-abu">
+      <div class="marquee-isi flex w-max font-judul text-2xl md:text-4xl uppercase whitespace-nowrap">
+        <span class="px-6">VOC bangkrut 1799 ✦</span>
+        <span class="px-6">Tanam paksa 1830 ✦</span>
+        <span class="px-6">KKN 1998 ✦</span>
+        <span class="px-6">Rp 300 triliun ✦</span>
+        <span class="px-6">No viral no justice? ✦</span>
+        <span class="px-6">Tolak amplop ✦</span>
+        <!-- diulang supaya berjalan tanpa putus -->
+        <span class="px-6">VOC bangkrut 1799 ✦</span>
+        <span class="px-6">Tanam paksa 1830 ✦</span>
+        <span class="px-6">KKN 1998 ✦</span>
+        <span class="px-6">Rp 300 triliun ✦</span>
+        <span class="px-6">No viral no justice? ✦</span>
+        <span class="px-6">Tolak amplop ✦</span>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         5. MANIFESTO — kata menyala saat di-scroll
+         ===================================================== -->
+    <section id="manifesto" class="relative py-32 md:py-48">
+      <div class="max-w-5xl mx-auto px-5 md:px-8">
+        <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-10">01 / MANIFESTO</p>
+        <!-- Kata di dalam <b> akan menyala oranye -->
+        <p id="teks-manifesto" class="font-judul uppercase text-4xl md:text-6xl lg:text-7xl leading-[1.05]">
+          Kita mewarisi candi, batik, dan gamelan. Tapi kita juga mewarisi <b>upeti</b>, <b>amplop</b>, dan <b>uang pelicin</b>. Yang pertama patut dirawat. Yang kedua harus <b>dibakar</b> sampai jadi abu.
+        </p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         6. LINIMASA — perjalanan korupsi dari masa ke masa
+         ===================================================== -->
+    <section id="linimasa" class="relative py-24 md:py-32 bg-arang">
+      <div class="max-w-7xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-20">
+          <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">02 / LINIMASA</p>
+          <h2 class="reveal font-judul uppercase text-5xl md:text-7xl">Jejak dari <span class="teks-api">masa ke masa</span></h2>
+          <p class="reveal mt-6 text-kertas/60 max-w-2xl mx-auto">
+            Klik kotak <span class="bg-kertas text-kertas px-2 rounded-sm text-xs">RAHASIA</span> untuk membuka fakta yang lama disembunyikan.
+          </p>
+        </div>
+
+        <div id="wadah-linimasa" class="relative">
+          <!-- Garis tengah: abu-abu (dasar) & api (terisi saat scroll) -->
+          <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 -translate-x-1/2 bg-debu rounded"></div>
+          <div id="garis-api" class="absolute left-4 md:left-1/2 top-0 w-1 -translate-x-1/2 rounded h-0"></div>
+
+          <!-- ERA 1 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:pl-0 md:pr-16 md:text-right">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1300–1800</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Era Kerajaan</h3>
+              <p class="font-ketik text-emas mt-2">“Upeti untuk Gusti”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-16">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Dalam masyarakat feodal, rakyat menyerahkan upeti kepada raja dan para penguasa daerah. Jabatan kerap didapat lewat
+                  persembahan dan kedekatan. Garis antara <em>hadiah</em> dan <em>suap</em> menjadi kabur — benih mental
+                  <strong class="text-emas">“asal bapak senang”</strong>.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Fakta: <span class="sensor px-1">penarik pajak lokal sering boleh menyisihkan sebagian pungutan untuk diri sendiri — makin keras memeras, makin kaya.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 2 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:order-2 md:pl-16">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1602–1799</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">VOC</h3>
+              <p class="font-ketik text-emas mt-2">“Vergaan Onder Corruptie”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-0 md:pr-16 md:order-1">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Kongsi dagang terkaya di dunia itu runtuh dari dalam. Pegawainya bergaji kecil, lalu berdagang gelap, menyelundupkan
+                  rempah, dan memainkan pembukuan. VOC resmi dibubarkan pada <strong class="text-emas">31 Desember 1799</strong> dengan utang menggunung.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Plesetan: <span class="sensor px-1">singkatan VOC diejek menjadi “Vergaan Onder Corruptie” — runtuh karena korupsi.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 3 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:pl-0 md:pr-16 md:text-right">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1830–1870</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Tanam Paksa</h3>
+              <p class="font-ketik text-emas mt-2">“Persen dari keringat petani”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-16">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Lewat <em>cultuurprocenten</em>, bupati dan pejabat kolonial mendapat persentase dari hasil panen yang disetor.
+                  Makin banyak setoran, makin besar bonus — petani diperas habis. Kelaparan melanda Cirebon, Demak, dan Grobogan.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Saksi: <span class="sensor px-1">novel Max Havelaar (1860) karya Multatuli membongkar pemerasan rakyat Lebak oleh penguasa lokal yang dibiarkan pemerintah kolonial.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 4 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:order-2 md:pl-16">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1945–1966</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Orde Lama</h3>
+              <p class="font-ketik text-emas mt-2">“Lembaga dibentuk, lalu dibungkam”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-0 md:pr-16 md:order-1">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Republik muda langsung berhadapan dengan penyakit lama. Dibentuk <strong class="text-emas">PARAN</strong> yang dipimpin
+                  A.H. Nasution, lalu <strong class="text-emas">Operasi Budhi (1963)</strong> yang menyasar perusahaan dan lembaga negara.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Ironi: <span class="sensor px-1">ketika penyelidikan mulai menyentuh orang kuat, operasi itu dihentikan dan diganti lembaga baru — pemberantasan pun meredup.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 5 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:pl-0 md:pr-16 md:text-right">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1966–1998</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Orde Baru</h3>
+              <p class="font-ketik text-emas mt-2">“Lahirnya singkatan K-K-N”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-16">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Tim Pemberantasan Korupsi (1967), Komisi Empat (1970), hingga Opstib (1977) silih berganti. Namun krisis
+                  Pertamina 1975 meninggalkan utang sekitar <strong class="text-emas">US$10 miliar</strong>. Korupsi, Kolusi, dan Nepotisme
+                  menjadi teriakan utama mahasiswa pada 1998.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Catatan dunia: <span class="sensor px-1">laporan Transparency International (2004) memperkirakan Soeharto menggelapkan US$15–35 miliar dan menempatkannya di urutan teratas pemimpin terkorup.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 6 -->
+          <article class="era relative grid md:grid-cols-2 gap-8 mb-20 md:mb-28">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:order-2 md:pl-16">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">1998–kini</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Reformasi</h3>
+              <p class="font-ketik text-emas mt-2">“KPK lahir, korupsi naik kelas”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-0 md:pr-16 md:order-1">
+              <div class="bg-abu border border-debu rounded-2xl p-6 md:p-8 hover:border-bara/60 hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  UU Tipikor (1999 &amp; 2001) dan <strong class="text-emas">KPK (2002)</strong> lahir dari tuntutan reformasi. Tapi angkanya makin gila:
+                  BLBI, e-KTP, Jiwasraya, Asabri, hingga tata niaga timah. Revisi UU KPK tahun 2019 memicu gelombang
+                  <strong class="text-emas">#ReformasiDikorupsi</strong>.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Angka: <span class="sensor px-1">kerugian negara kasus timah dihitung sekitar Rp 300 triliun — kasus dengan nilai kerugian terbesar dalam sejarah Indonesia.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- ERA 7 -->
+          <article class="era relative grid md:grid-cols-2 gap-8">
+            <span class="titik-era absolute left-4 md:left-1/2 top-2 w-5 h-5 -translate-x-1/2 rounded-full bg-debu border-4 border-arang z-10"></span>
+            <div class="reveal dari-kiri pl-12 md:pl-0 md:pr-16 md:text-right">
+              <p class="font-judul text-6xl md:text-8xl text-bara/20">Era Digital</p>
+              <h3 class="font-judul uppercase text-3xl md:text-4xl -mt-6 md:-mt-10">Sekarang</h3>
+              <p class="font-ketik text-emas mt-2">“Amplop berganti transfer”</p>
+            </div>
+            <div class="reveal dari-kanan pl-12 md:pl-16">
+              <div class="bg-abu border border-bara/50 rounded-2xl p-6 md:p-8 shadow-[0_0_40px_rgba(255,77,26,.15)] hover:-translate-y-1 transition-all duration-300">
+                <p class="text-kertas/80 leading-relaxed">
+                  Modusnya ikut “go digital”: e-wallet, rekening atas nama orang lain, aset kripto. Tapi jejak digital juga
+                  jadi senjata rakyat. Gaya hidup mewah yang dipamerkan di media sosial bisa membuka pintu penyelidikan.
+                </p>
+                <p class="mt-4 text-sm text-kertas/70">
+                  Contoh: <span class="sensor px-1">harta pejabat pajak Rafael Alun (2023) disorot setelah unggahan pamer kemewahan keluarganya viral; ia kemudian divonis 14 tahun penjara.</span>
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         7. ANGKA — penghitung & grafik IPK
+         ===================================================== -->
+    <section id="angka" class="relative py-24 md:py-32">
+      <div class="max-w-7xl mx-auto px-5 md:px-8">
+        <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">03 / ANGKA TAK BERBOHONG</p>
+        <h2 class="reveal font-judul uppercase text-5xl md:text-7xl max-w-4xl">Angka yang seharusnya <span class="teks-api">bikin marah</span></h2>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
+          <div class="reveal zoom kartu-miring bg-arang border border-debu rounded-2xl p-7 hover:border-bara transition-colors">
+            <p class="font-judul text-5xl md:text-6xl text-bara">Rp <span class="hitung" data-target="300">0</span> T</p>
+            <p class="mt-3 text-kertas/70 text-sm">Perkiraan kerugian negara kasus tata niaga timah (2015–2022).</p>
+          </div>
+          <div class="reveal zoom kartu-miring bg-arang border border-debu rounded-2xl p-7 hover:border-bara transition-colors" style="transition-delay:.1s">
+            <p class="font-judul text-5xl md:text-6xl text-bara">Rp <span class="hitung" data-target="2.3" data-desimal="1">0</span> T</p>
+            <p class="mt-3 text-kertas/70 text-sm">Kerugian negara proyek KTP elektronik — kartu yang ada di dompetmu.</p>
+          </div>
+          <div class="reveal zoom kartu-miring bg-arang border border-debu rounded-2xl p-7 hover:border-bara transition-colors" style="transition-delay:.2s">
+            <p class="font-judul text-5xl md:text-6xl text-bara"><span class="hitung" data-target="37">0</span>/100</p>
+            <p class="mt-3 text-kertas/70 text-sm">Skor Indeks Persepsi Korupsi Indonesia 2024. Peringkat 99 dari 180 negara.</p>
+          </div>
+          <div class="reveal zoom kartu-miring bg-arang border border-debu rounded-2xl p-7 hover:border-bara transition-colors" style="transition-delay:.3s">
+            <p class="font-judul text-5xl md:text-6xl text-bara"><span class="hitung" data-target="1799" data-tanpa-titik="1">0</span></p>
+            <p class="mt-3 text-kertas/70 text-sm">Tahun VOC dibubarkan. Korupsi sudah menenggelamkan raksasa sejak dulu.</p>
+          </div>
+        </div>
+
+        <!-- Grafik IPK -->
+        <div class="reveal mt-16 bg-arang border border-debu rounded-3xl p-6 md:p-10">
+          <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+            <div>
+              <h3 class="font-judul uppercase text-3xl">Skor IPK Indonesia 2014–2024</h3>
+              <p class="text-kertas/60 text-sm mt-1">Skala 0–100. Makin tinggi = makin bersih. Sepuluh tahun, hampir tidak beranjak.</p>
+            </div>
+            <p id="info-batang" class="font-ketik text-emas text-sm">Arahkan kursor ke batang ↓</p>
+          </div>
+          <!-- Batang diisi oleh script.js -->
+          <div id="grafik-ipk" class="grafik relative h-64 flex items-end gap-1.5 sm:gap-3 border-b border-debu">
+            <!-- garis bantu skor 50 -->
+            <div class="absolute inset-x-0 top-0 border-t border-dashed border-kertas/20">
+              <span class="absolute -top-5 right-0 text-xs text-kertas/40">50</span>
+            </div>
+          </div>
+          <div id="label-tahun" class="flex gap-1.5 sm:gap-3 mt-2 text-[10px] sm:text-xs text-kertas/50"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee kedua (arah berlawanan) -->
+    <div class="marquee overflow-hidden bg-kertas text-abu py-3 rotate-1 scale-105">
+      <div class="marquee-isi balik flex w-max font-ketik text-lg md:text-xl uppercase whitespace-nowrap">
+        <span class="px-6">“uang rokok” ✕</span>
+        <span class="px-6">“uang lelah” ✕</span>
+        <span class="px-6">“uang terima kasih” ✕</span>
+        <span class="px-6">“sudah biasa” ✕</span>
+        <span class="px-6">“orang dalam” ✕</span>
+        <span class="px-6">“uang rokok” ✕</span>
+        <span class="px-6">“uang lelah” ✕</span>
+        <span class="px-6">“uang terima kasih” ✕</span>
+        <span class="px-6">“sudah biasa” ✕</span>
+        <span class="px-6">“orang dalam” ✕</span>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         7b. GALERI SATIR — poster & ilustrasi sindiran
+         Ilustrasi digambar dengan SVG (kode), jadi tetap tajam
+         dan bisa dianimasikan lewat css/style.css
+         ===================================================== -->
+    <section id="satir" class="relative py-24 md:py-32 overflow-hidden">
+      <div class="absolute top-1/3 -left-40 w-[30rem] h-[30rem] bg-darah/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative max-w-7xl mx-auto px-5 md:px-8">
+        <div class="max-w-3xl mb-14">
+          <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">04 / GALERI SATIR</p>
+          <h2 class="reveal font-judul uppercase text-5xl md:text-7xl">Tertawa, <span class="teks-api">lalu marah</span></h2>
+          <p class="reveal mt-6 text-kertas/60">Satir adalah cara lama rakyat melawan: menertawakan yang berkuasa supaya kita tidak terbiasa. Arahkan kursor (atau ketuk) gambar untuk melihat lebih dekat.</p>
+        </div>
+
+        <!-- Baris 1: poster + pejabat bermulut manis -->
+        <div class="grid lg:grid-cols-12 gap-6">
+          <!-- Poster -->
+          <button id="buka-poster" type="button" class="reveal dari-kiri kartu-miring group lg:col-span-5 relative block rounded-3xl overflow-hidden border border-debu hover:border-bara text-left" aria-label="Perbesar poster">
+            <div class="overflow-hidden">
+              <img src="img/poster-satir.jpg" alt="Poster satir: Setengah budaya kita korupsi?! — warisan lama yang terus menjerat masa depan" loading="lazy" class="w-full h-auto group-hover:scale-105 transition-transform duration-700">
+            </div>
+            <div class="p-5 bg-arang">
+              <p class="font-judul uppercase text-2xl">“Setengah budaya kita korupsi?!”</p>
+              <p class="text-sm text-kertas/60">Klik untuk memperbesar ⤢</p>
+            </div>
+          </button>
+
+          <!-- Ilustrasi 1: Mulut manis (topeng bisa diangkat) -->
+          <figure id="satir-topeng" class="reveal dari-kanan satir-topeng lg:col-span-7 bg-arang border border-debu rounded-3xl p-5 md:p-8 flex flex-col hover:border-bara transition-colors cursor-pointer">
+            <div class="flex-1 flex items-center justify-center">
+              <svg viewBox="0 0 400 440" class="w-full max-w-md h-auto" role="img" aria-label="Pejabat bermulut manis memakai topeng tersenyum, di bawah meja menerima amplop">
+                <circle class="sinar" cx="200" cy="190" r="120" fill="none" stroke="#ff4d1a" stroke-opacity=".12" stroke-width="240" stroke-dasharray="31.4 31.4"/>
+                <!-- badan & jas -->
+                <path d="M50 440 Q60 318 200 298 Q340 318 350 440 Z" fill="#1c1917" stroke="#0b0807" stroke-width="4"/>
+                <path d="M168 300 L200 362 L232 300 Z" fill="#f5ede6"/>
+                <path d="M192 312 L208 312 L215 380 L200 398 L185 380 Z" fill="#b91c1c" stroke="#0b0807" stroke-width="3"/>
+                <path d="M168 300 L148 360 M232 300 L252 360" stroke="#3a302c" stroke-width="4"/>
+                <!-- leher, telinga, kepala, rambut -->
+                <rect x="176" y="250" width="48" height="56" fill="#c98e62"/>
+                <ellipse cx="117" cy="185" rx="15" ry="24" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+                <ellipse cx="283" cy="185" rx="15" ry="24" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+                <ellipse cx="200" cy="178" rx="84" ry="96" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+                <path d="M116 165 Q106 78 200 76 Q294 78 284 165 Q276 118 236 112 Q200 130 150 112 Q122 125 116 165 Z" fill="#1a1412" stroke="#0b0807" stroke-width="4"/>
+
+                <!-- WAJAH ASLI (di balik topeng) -->
+                <g>
+                  <path d="M140 138 L182 154 M260 138 L218 154" stroke="#0b0807" stroke-width="7" stroke-linecap="round"/>
+                  <circle cx="163" cy="175" r="17" fill="#fff" stroke="#0b0807" stroke-width="3"/>
+                  <circle cx="237" cy="175" r="17" fill="#fff" stroke="#0b0807" stroke-width="3"/>
+                  <text x="163" y="180" text-anchor="middle" font-family="Anton" font-size="13" fill="#b91c1c">Rp</text>
+                  <text x="237" y="180" text-anchor="middle" font-family="Anton" font-size="13" fill="#b91c1c">Rp</text>
+                  <path d="M200 182 Q188 210 206 212" fill="none" stroke="#0b0807" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M145 228 Q200 285 255 228 Q200 248 145 228 Z" fill="#3b0d0d" stroke="#0b0807" stroke-width="4"/>
+                  <path d="M150 230 Q200 250 250 230 L247 238 Q200 262 153 238 Z" fill="#fff"/>
+                  <rect x="214" y="239" width="11" height="8" fill="#ffb347"/>
+                  <path class="liur" d="M232 248 Q237 262 232 268 Q227 262 232 248 Z" fill="#9fd8f0" stroke="#0b0807" stroke-width="1.5"/>
+                </g>
+
+                <!-- TOPENG MANIS (terangkat saat hover/ketuk) -->
+                <g class="topeng">
+                  <ellipse class="halo" cx="200" cy="70" rx="50" ry="11" fill="none" stroke="#ffb347" stroke-width="6"/>
+                  <ellipse cx="200" cy="185" rx="78" ry="84" fill="#f6dcc0" stroke="#0b0807" stroke-width="4"/>
+                  <path d="M146 172 Q163 152 180 172 M220 172 Q237 152 254 172" fill="none" stroke="#0b0807" stroke-width="5" stroke-linecap="round"/>
+                  <circle cx="148" cy="205" r="15" fill="#ff8a80" opacity=".55"/>
+                  <circle cx="252" cy="205" r="15" fill="#ff8a80" opacity=".55"/>
+                  <path d="M150 212 Q200 268 250 212 Q200 232 150 212 Z" fill="#b91c1c" stroke="#0b0807" stroke-width="4"/>
+                  <!-- madu menetes = kata-kata manis -->
+                  <path class="madu" d="M232 226 L242 226 L242 252 Q237 266 232 252 Z" fill="#ffb347" stroke="#0b0807" stroke-width="2"/>
+                </g>
+
+                <!-- Balon kata -->
+                <path d="M276 72 L262 98 L298 72" fill="#f5ede6" stroke="#0b0807" stroke-width="3"/>
+                <rect x="252" y="12" width="142" height="62" rx="14" fill="#f5ede6" stroke="#0b0807" stroke-width="3"/>
+                <rect x="278" y="68" width="18" height="6" fill="#f5ede6"/>
+                <text class="teks-manis" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#0b0807"><tspan x="323" y="38">Saya anti</tspan><tspan x="323" y="58">korupsi! 😇</tspan></text>
+                <text class="teks-asli" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#b91c1c"><tspan x="323" y="38">...asal ada</tspan><tspan x="323" y="58">bagiannya 🤑</tspan></text>
+
+                <!-- Meja, papan nama, dan yang terjadi di bawah meja -->
+                <rect x="140" y="322" width="120" height="28" fill="#ffb347" stroke="#0b0807" stroke-width="3"/>
+                <text x="200" y="342" text-anchor="middle" font-family="Anton" font-size="14" fill="#0b0807" letter-spacing="1">YANG TERHORMAT</text>
+                <rect x="-4" y="350" width="408" height="22" fill="#5b3a26" stroke="#0b0807" stroke-width="4"/>
+                <rect x="0" y="372" width="400" height="68" fill="#0b0807" opacity=".85"/>
+                <text x="16" y="392" font-family="Special Elite" font-size="12" fill="#f5ede6" opacity=".55">di bawah meja ↓</text>
+                <rect x="20" y="404" width="104" height="22" rx="8" fill="#1c1917" stroke="#3a302c" stroke-width="2"/>
+                <ellipse cx="138" cy="415" rx="20" ry="12" fill="#d9a074" stroke="#0b0807" stroke-width="3"/>
+                <rect x="306" y="404" width="100" height="22" rx="8" fill="#57534e" stroke="#3a302c" stroke-width="2"/>
+                <ellipse cx="300" cy="415" rx="18" ry="11" fill="#c98e62" stroke="#0b0807" stroke-width="3"/>
+                <g class="amplop-geser">
+                  <rect x="252" y="402" width="40" height="26" rx="2" fill="#f5ede6" stroke="#0b0807" stroke-width="2"/>
+                  <path d="M252 402 L272 418 L292 402" fill="none" stroke="#0b0807" stroke-width="2"/>
+                </g>
+              </svg>
+            </div>
+            <figcaption class="mt-4 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p class="font-judul uppercase text-3xl">Mulut manis</p>
+                <p class="text-sm text-kertas/60">Janji manis di depan kamera, amplop di bawah meja.</p>
+              </div>
+              <span class="font-ketik text-xs text-emas">↻ arahkan / ketuk untuk membuka topeng</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <!-- Baris 2: tikus berdasi + rompi oranye -->
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <!-- Ilustrasi 2: Tikus berdasi -->
+          <figure class="reveal bg-arang border border-debu rounded-3xl p-5 md:p-8 hover:border-bara hover:-translate-y-1 transition-all">
+            <svg viewBox="0 0 400 400" class="w-full max-w-sm mx-auto h-auto" role="img" aria-label="Tikus berdasi duduk di atas karung uang APBN yang bocor">
+              <circle class="sinar" cx="200" cy="200" r="120" fill="none" stroke="#ff4d1a" stroke-opacity=".1" stroke-width="240" stroke-dasharray="31.4 31.4"/>
+              <ellipse cx="200" cy="380" rx="170" ry="12" fill="#0b0807" opacity=".6"/>
+              <!-- karung APBN -->
+              <path d="M200 175 C120 182 66 262 78 326 Q92 376 200 376 Q308 376 322 326 C334 262 280 182 200 175 Z" fill="#c9a36a" stroke="#0b0807" stroke-width="4"/>
+              <text x="200" y="305" text-anchor="middle" font-family="Anton" font-size="58" fill="#5b3a26">APBN</text>
+              <ellipse cx="296" cy="338" rx="10" ry="6" fill="#0b0807"/>
+              <!-- koin bocor -->
+              <circle class="koin-jatuh" cx="300" cy="344" r="8" fill="#ffb347" stroke="#0b0807" stroke-width="2"/>
+              <circle class="koin-jatuh" cx="300" cy="344" r="8" fill="#ffb347" stroke="#0b0807" stroke-width="2" style="animation-delay:.6s"/>
+              <circle class="koin-jatuh" cx="300" cy="344" r="8" fill="#ffb347" stroke="#0b0807" stroke-width="2" style="animation-delay:1.2s"/>
+              <ellipse cx="352" cy="374" rx="14" ry="5" fill="#ffb347" stroke="#0b0807" stroke-width="2"/>
+              <ellipse cx="366" cy="368" rx="14" ry="5" fill="#ffb347" stroke="#0b0807" stroke-width="2"/>
+              <!-- ekor -->
+              <path class="ekor" d="M240 160 Q300 150 300 112 Q300 82 330 86" fill="none" stroke="#c4867a" stroke-width="6" stroke-linecap="round"/>
+              <!-- badan -->
+              <ellipse cx="200" cy="148" rx="48" ry="40" fill="#8f8a85" stroke="#0b0807" stroke-width="4"/>
+              <ellipse cx="200" cy="156" rx="28" ry="26" fill="#bdb6ae"/>
+              <ellipse cx="172" cy="186" rx="14" ry="7" fill="#f2a7a0" stroke="#0b0807" stroke-width="3"/>
+              <ellipse cx="228" cy="186" rx="14" ry="7" fill="#f2a7a0" stroke="#0b0807" stroke-width="3"/>
+              <!-- kerah & dasi -->
+              <path d="M184 114 L200 128 L216 114 Z" fill="#fff" stroke="#0b0807" stroke-width="2"/>
+              <path d="M196 126 L204 126 L208 160 L200 170 L192 160 Z" fill="#b91c1c" stroke="#0b0807" stroke-width="2"/>
+              <!-- koin dipeluk -->
+              <circle cx="200" cy="140" r="15" fill="#ffb347" stroke="#0b0807" stroke-width="3"/>
+              <text x="200" y="145" text-anchor="middle" font-family="Anton" font-size="12" fill="#5b3a26">Rp</text>
+              <ellipse cx="184" cy="142" rx="7" ry="6" fill="#8f8a85" stroke="#0b0807" stroke-width="2"/>
+              <ellipse cx="216" cy="142" rx="7" ry="6" fill="#8f8a85" stroke="#0b0807" stroke-width="2"/>
+              <!-- kepala (mengunyah) -->
+              <g class="kepala-tikus">
+                <circle cx="170" cy="62" r="20" fill="#8f8a85" stroke="#0b0807" stroke-width="4"/>
+                <circle cx="170" cy="62" r="11" fill="#f2a7a0"/>
+                <circle cx="230" cy="62" r="20" fill="#8f8a85" stroke="#0b0807" stroke-width="4"/>
+                <circle cx="230" cy="62" r="11" fill="#f2a7a0"/>
+                <ellipse cx="200" cy="90" rx="36" ry="32" fill="#8f8a85" stroke="#0b0807" stroke-width="4"/>
+                <path d="M178 76 L192 80 M222 76 L208 80" stroke="#0b0807" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="187" cy="88" r="5" fill="#0b0807"/><circle cx="188.5" cy="86.5" r="1.6" fill="#fff"/>
+                <circle cx="213" cy="88" r="5" fill="#0b0807"/><circle cx="214.5" cy="86.5" r="1.6" fill="#fff"/>
+                <ellipse cx="200" cy="108" rx="16" ry="12" fill="#bdb6ae" stroke="#0b0807" stroke-width="3"/>
+                <circle cx="200" cy="101" r="5" fill="#f2a7a0" stroke="#0b0807" stroke-width="2"/>
+                <rect x="195" y="116" width="10" height="8" fill="#fff" stroke="#0b0807" stroke-width="1.5"/>
+                <path d="M184 106 L148 98 M184 111 L148 114 M216 106 L252 98 M216 111 L252 114" stroke="#0b0807" stroke-width="1.5"/>
+              </g>
+            </svg>
+            <figcaption class="mt-4">
+              <p class="font-judul uppercase text-3xl">Tikus berdasi</p>
+              <p class="text-sm text-kertas/60">Bocornya halus, tapi dari satu kasus timah saja hilang sekitar Rp 300 triliun. <a href="#kalkulator" class="text-emas hover:underline">Hitung dampaknya →</a></p>
+            </figcaption>
+          </figure>
+
+          <!-- Ilustrasi 3: Rompi oranye, senyum lebar -->
+          <figure class="reveal bg-arang border border-debu rounded-3xl p-5 md:p-8 hover:border-bara hover:-translate-y-1 transition-all" style="transition-delay:.1s">
+            <svg viewBox="0 0 400 420" class="w-full max-w-sm mx-auto h-auto" role="img" aria-label="Tersangka berompi oranye tersenyum lebar dan melambai ke kamera wartawan">
+              <!-- kilatan kamera -->
+              <path class="kilat" transform="translate(52 64)" d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#fff"/>
+              <path class="kilat" transform="translate(352 52)" d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#fff" style="animation-delay:.7s"/>
+              <path class="kilat" transform="translate(40 250)" d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#fff" style="animation-delay:1.3s"/>
+              <path class="kilat" transform="translate(362 262)" d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#fff" style="animation-delay:.35s"/>
+              <text x="20" y="150" font-family="Anton" font-size="22" fill="#ffb347" transform="rotate(-14 20 150)">CEKREK!</text>
+              <!-- badan & rompi -->
+              <path d="M80 420 Q92 270 200 258 Q308 270 320 420 Z" fill="#f5ede6" stroke="#0b0807" stroke-width="4"/>
+              <path d="M96 420 Q104 292 150 268 L250 268 Q296 292 304 420 Z" fill="#ff7a1a" stroke="#0b0807" stroke-width="4"/>
+              <path d="M168 262 L200 306 L232 262 Z" fill="#f5ede6" stroke="#0b0807" stroke-width="3"/>
+              <text x="200" y="372" text-anchor="middle" font-family="Anton" font-size="34" fill="#0b0807" letter-spacing="2">TAHANAN</text>
+              <!-- kepala -->
+              <rect x="178" y="215" width="44" height="50" fill="#c98e62"/>
+              <ellipse cx="130" cy="165" rx="13" ry="20" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+              <ellipse cx="270" cy="165" rx="13" ry="20" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+              <circle cx="200" cy="160" r="70" fill="#d9a074" stroke="#0b0807" stroke-width="4"/>
+              <path d="M132 142 Q128 86 200 88 Q272 86 268 142 Q252 108 210 108 Q168 116 132 142 Z" fill="#1a1412" stroke="#0b0807" stroke-width="4"/>
+              <path d="M156 128 Q172 118 186 126 M214 126 Q228 118 244 128" fill="none" stroke="#0b0807" stroke-width="5" stroke-linecap="round"/>
+              <path d="M160 152 Q172 138 184 152 M216 152 Q228 138 240 152" fill="none" stroke="#0b0807" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="156" cy="176" r="12" fill="#ff8a80" opacity=".5"/>
+              <circle cx="244" cy="176" r="12" fill="#ff8a80" opacity=".5"/>
+              <path d="M156 182 Q200 238 244 182 Z" fill="#3b0d0d" stroke="#0b0807" stroke-width="4"/>
+              <path d="M164 184 L236 184 L228 196 L172 196 Z" fill="#fff"/>
+              <path class="kilau" transform="translate(252 178)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" fill="#fff"/>
+              <!-- tangan melambai (salam dua jari) -->
+              <g class="lambai">
+                <path d="M290 296 L345 178" stroke="#0b0807" stroke-width="40" stroke-linecap="round"/>
+                <path d="M290 296 L345 178" stroke="#f5ede6" stroke-width="32" stroke-linecap="round"/>
+                <rect x="336" y="120" width="11" height="36" rx="5.5" fill="#d9a074" stroke="#0b0807" stroke-width="3" transform="rotate(-14 341 140)"/>
+                <rect x="354" y="120" width="11" height="36" rx="5.5" fill="#d9a074" stroke="#0b0807" stroke-width="3" transform="rotate(14 359 140)"/>
+                <circle cx="350" cy="162" r="20" fill="#d9a074" stroke="#0b0807" stroke-width="3"/>
+              </g>
+              <!-- mikrofon wartawan -->
+              <path d="M24 420 L96 334" stroke="#3a302c" stroke-width="9" stroke-linecap="round"/>
+              <circle cx="100" cy="326" r="18" fill="#1c1917" stroke="#57534e" stroke-width="3"/>
+              <rect x="70" y="346" width="38" height="20" fill="#b91c1c" stroke="#0b0807" stroke-width="2"/>
+              <text x="89" y="361" text-anchor="middle" font-family="Anton" font-size="13" fill="#fff">TV</text>
+            </svg>
+            <figcaption class="mt-4">
+              <p class="font-judul uppercase text-3xl">Rompi oranye, senyum lebar</p>
+              <p class="text-sm text-kertas/60">Ditangkap, tapi tetap melambai ke kamera. Rasa malu pun ikut dikorupsi. <a href="#kuis" class="text-emas hover:underline">Uji kepekaanmu →</a></p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <!-- Baris 3: estafet amplop lintas zaman -->
+        <figure class="reveal mt-6 bg-arang border border-debu rounded-3xl p-5 md:p-8 hover:border-bara transition-colors">
+          <svg viewBox="0 0 600 270" class="w-full h-auto" role="img" aria-label="Amplop berpindah tangan dari pejabat VOC, ke pejabat Orde Baru, lalu menjadi transfer digital">
+            <text x="100" y="34" text-anchor="middle" font-family="Anton" font-size="20" fill="#f5ede6">1700-AN · VOC</text>
+            <text x="300" y="34" text-anchor="middle" font-family="Anton" font-size="20" fill="#f5ede6">1980-AN · ORBA</text>
+            <text x="500" y="34" text-anchor="middle" font-family="Anton" font-size="20" fill="#ff4d1a">KINI · DIGITAL</text>
+            <path d="M175 28 L225 28 M375 28 L425 28" stroke="#ff4d1a" stroke-width="3" stroke-dasharray="6 6"/>
+            <!-- tangan 1: lengan VOC berenda -->
+            <rect x="74" y="192" width="52" height="80" fill="#1e293b" stroke="#0b0807" stroke-width="3"/>
+            <path d="M68 196 L74 182 L80 196 L86 182 L92 196 L98 182 L104 196 L110 182 L116 196 L122 182 L128 196 L132 182 L132 198 L68 198 Z" fill="#f5ede6" stroke="#0b0807" stroke-width="2"/>
+            <ellipse cx="100" cy="174" rx="38" ry="14" fill="#e8b48f" stroke="#0b0807" stroke-width="3"/>
+            <ellipse cx="138" cy="166" rx="9" ry="6" fill="#e8b48f" stroke="#0b0807" stroke-width="3" transform="rotate(-30 138 166)"/>
+            <!-- tangan 2: lengan safari -->
+            <rect x="274" y="192" width="52" height="80" fill="#a68a5b" stroke="#0b0807" stroke-width="3"/>
+            <rect x="270" y="184" width="60" height="14" fill="#8c7448" stroke="#0b0807" stroke-width="2"/>
+            <ellipse cx="300" cy="174" rx="38" ry="14" fill="#c98e62" stroke="#0b0807" stroke-width="3"/>
+            <ellipse cx="338" cy="166" rx="9" ry="6" fill="#c98e62" stroke="#0b0807" stroke-width="3" transform="rotate(-30 338 166)"/>
+            <!-- tangan 3: jas modern + jam pintar -->
+            <rect x="474" y="192" width="52" height="80" fill="#1c1917" stroke="#0b0807" stroke-width="3"/>
+            <rect x="470" y="184" width="60" height="14" fill="#f5ede6" stroke="#0b0807" stroke-width="2"/>
+            <rect x="486" y="178" width="18" height="12" rx="3" fill="#0b0807" stroke="#ffb347" stroke-width="2"/>
+            <ellipse cx="500" cy="174" rx="38" ry="14" fill="#d9a074" stroke="#0b0807" stroke-width="3"/>
+            <ellipse cx="538" cy="166" rx="9" ry="6" fill="#d9a074" stroke="#0b0807" stroke-width="3" transform="rotate(-30 538 166)"/>
+            <!-- amplop yang berpindah tangan -->
+            <g class="amplop-estafet">
+              <rect x="-26" y="-17" width="52" height="34" rx="2" fill="#f5ede6" stroke="#0b0807" stroke-width="2.5"/>
+              <path d="M-26 -17 L0 4 L26 -17" fill="none" stroke="#0b0807" stroke-width="2.5"/>
+              <text x="0" y="13" text-anchor="middle" font-family="Anton" font-size="10" fill="#b91c1c">Rp</text>
+            </g>
+            <!-- berubah jadi HP di zaman digital -->
+            <g class="hp-estafet">
+              <rect x="478" y="96" width="44" height="66" rx="8" fill="#1c1917" stroke="#ffb347" stroke-width="3"/>
+              <rect x="484" y="106" width="32" height="44" rx="3" fill="#ff4d1a"/>
+              <text x="500" y="126" text-anchor="middle" font-family="Anton" font-size="11" fill="#0b0807">TRF</text>
+              <text x="500" y="142" text-anchor="middle" font-family="Anton" font-size="11" fill="#0b0807">Rp ✓</text>
+            </g>
+          </svg>
+          <figcaption class="mt-2 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p class="font-judul uppercase text-3xl">Estafet amplop</p>
+              <p class="text-sm text-kertas/60">Pelarinya berganti tiap zaman, tongkat estafetnya tetap sama. <a href="#linimasa" class="text-emas hover:underline">Lihat linimasanya →</a></p>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         8. DULU & KINI — kartu balik
+         ===================================================== -->
+    <section id="dulu-kini" class="relative py-24 md:py-32">
+      <div class="max-w-7xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-14">
+          <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">05 / DULU &amp; KINI</p>
+          <h2 class="reveal font-judul uppercase text-5xl md:text-7xl">Wajah lama, <span class="teks-api">kostum baru</span></h2>
+          <p class="reveal mt-6 text-kertas/60">Arahkan kursor (atau ketuk) kartu untuk melihat versi era digitalnya.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Kartu 1 -->
+          <div class="reveal flip h-72 cursor-pointer">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · ERA KERAJAAN</p>
+                <div>
+                  <p class="text-5xl mb-3">👑</p>
+                  <h3 class="font-judul text-3xl uppercase">Upeti</h3>
+                  <p class="font-ketik text-sm mt-2">Persembahan wajib untuk penguasa.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">📲</p>
+                  <h3 class="font-judul text-3xl uppercase">Gratifikasi digital</h3>
+                  <p class="text-sm mt-2 font-medium">Transfer e-wallet, voucher, sampai “hadiah” yang diantar kurir ke pejabat.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu 2 -->
+          <div class="reveal flip h-72 cursor-pointer" style="transition-delay:.1s">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · TANAM PAKSA</p>
+                <div>
+                  <p class="text-5xl mb-3">🌾</p>
+                  <h3 class="font-judul text-3xl uppercase">Cultuurprocenten</h3>
+                  <p class="font-ketik text-sm mt-2">Persen untuk pejabat dari setiap panen.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">🏗️</p>
+                  <h3 class="font-judul text-3xl uppercase">Fee proyek</h3>
+                  <p class="text-sm mt-2 font-medium">“Jatah” persen dari nilai kontrak sebagai syarat memenangkan tender.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu 3 -->
+          <div class="reveal flip h-72 cursor-pointer" style="transition-delay:.2s">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · VOC</p>
+                <div>
+                  <p class="text-5xl mb-3">📜</p>
+                  <h3 class="font-judul text-3xl uppercase">Pembukuan palsu</h3>
+                  <p class="font-ketik text-sm mt-2">Angka di buku besar tak sama dengan isi gudang.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">📊</p>
+                  <h3 class="font-judul text-3xl uppercase">Mark-up &amp; laporan fiktif</h3>
+                  <p class="text-sm mt-2 font-medium">Harga digelembungkan, kegiatan tak pernah ada, tapi SPJ-nya rapi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu 4 -->
+          <div class="reveal flip h-72 cursor-pointer">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · FEODAL</p>
+                <div>
+                  <p class="text-5xl mb-3">🏰</p>
+                  <h3 class="font-judul text-3xl uppercase">Jabatan turun-temurun</h3>
+                  <p class="font-ketik text-sm mt-2">Kekuasaan diwariskan ke kerabat.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">👨‍👩‍👦</p>
+                  <h3 class="font-judul text-3xl uppercase">Dinasti &amp; orang dalam</h3>
+                  <p class="text-sm mt-2 font-medium">Keluarga di kursi kekuasaan, rekrutmen lewat “jalur titipan”.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu 5 -->
+          <div class="reveal flip h-72 cursor-pointer" style="transition-delay:.1s">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · VOC</p>
+                <div>
+                  <p class="text-5xl mb-3">⛵</p>
+                  <h3 class="font-judul text-3xl uppercase">Penyelundupan</h3>
+                  <p class="font-ketik text-sm mt-2">Rempah dijual diam-diam untuk kantong pribadi.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">🪙</p>
+                  <h3 class="font-judul text-3xl uppercase">Cuci uang</h3>
+                  <p class="text-sm mt-2 font-medium">Lewat aset kripto, perusahaan cangkang, dan rekening pinjaman nama.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu 6 -->
+          <div class="reveal flip h-72 cursor-pointer" style="transition-delay:.2s">
+            <div class="flip-isi relative w-full h-full">
+              <div class="flip-muka kertas absolute inset-0 rounded-2xl p-7 flex flex-col justify-between">
+                <p class="font-ketik text-xs tracking-widest opacity-60">DULU · PELABUHAN</p>
+                <div>
+                  <p class="text-5xl mb-3">⚓</p>
+                  <h3 class="font-judul text-3xl uppercase">Uang pelicin</h3>
+                  <p class="font-ketik text-sm mt-2">Bayar lebih agar barang cepat keluar.</p>
+                </div>
+              </div>
+              <div class="flip-belakang absolute inset-0 rounded-2xl p-7 flex flex-col justify-between bg-gradient-to-br from-bara to-darah text-abu">
+                <p class="font-ketik text-xs tracking-widest opacity-70">KINI · ERA DIGITAL</p>
+                <div>
+                  <p class="text-5xl mb-3">🧾</p>
+                  <h3 class="font-judul text-3xl uppercase">Pungli layanan</h3>
+                  <p class="text-sm mt-2 font-medium">“Uang rokok” supaya berkas diproses — meski antreannya sudah online.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         9. KALKULATOR — kalau uangnya tidak dicuri
+         ===================================================== -->
+    <section id="kalkulator" class="relative py-24 md:py-32 bg-arang overflow-hidden">
+      <div class="absolute -top-40 -right-40 w-[30rem] h-[30rem] bg-bara/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative max-w-6xl mx-auto px-5 md:px-8">
+        <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">06 / KALKULATOR KEHILANGAN</p>
+        <h2 class="reveal font-judul uppercase text-5xl md:text-7xl max-w-4xl">Kalau uangnya <span class="teks-api">tidak dicuri</span>...</h2>
+
+        <div class="reveal mt-12 grid lg:grid-cols-5 gap-8">
+          <!-- Kontrol -->
+          <div class="lg:col-span-2 bg-abu border border-debu rounded-3xl p-7">
+            <p class="text-sm text-kertas/60 mb-3">Pilih kasus:</p>
+            <div id="pilih-kasus" class="flex flex-wrap gap-2 mb-8">
+              <button data-nilai="2.3"  class="tombol-kasus px-4 py-2 rounded-full border border-debu text-sm hover:border-bara transition-colors">e-KTP</button>
+              <button data-nilai="16.8" class="tombol-kasus px-4 py-2 rounded-full border border-debu text-sm hover:border-bara transition-colors">Jiwasraya</button>
+              <button data-nilai="22.7" class="tombol-kasus px-4 py-2 rounded-full border border-debu text-sm hover:border-bara transition-colors">Asabri</button>
+              <button data-nilai="300"  class="tombol-kasus px-4 py-2 rounded-full border border-debu text-sm hover:border-bara transition-colors">Timah</button>
+            </div>
+
+            <p class="text-sm text-kertas/60">Atau geser sendiri:</p>
+            <p class="font-judul text-5xl md:text-6xl text-bara my-3">Rp <span id="nilai-slider">2,3</span> T</p>
+            <input id="slider" type="range" min="1" max="300" step="0.1" value="2.3" class="w-full">
+            <div class="flex justify-between text-xs text-kertas/40 mt-2"><span>Rp 1 T</span><span>Rp 300 T</span></div>
+
+            <p class="text-xs text-kertas/40 mt-8 leading-relaxed">
+              *Asumsi kasar untuk ilustrasi: gaji guru honorer Rp 2 juta/bulan, ruang kelas Rp 300 juta,
+              puskesmas Rp 10 miliar, makan bergizi Rp 15 ribu/porsi, beasiswa kuliah Rp 60 juta/orang.
+            </p>
+          </div>
+
+          <!-- Hasil -->
+          <div class="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+            <div class="bg-abu border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all">
+              <p class="text-3xl">👩‍🏫</p>
+              <p class="font-judul text-4xl text-emas mt-3" id="hasil-guru">0</p>
+              <p class="text-sm text-kertas/60 mt-1">guru honorer digaji selama setahun penuh</p>
+            </div>
+            <div class="bg-abu border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all">
+              <p class="text-3xl">🏫</p>
+              <p class="font-judul text-4xl text-emas mt-3" id="hasil-kelas">0</p>
+              <p class="text-sm text-kertas/60 mt-1">ruang kelas baru dibangun</p>
+            </div>
+            <div class="bg-abu border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all">
+              <p class="text-3xl">🏥</p>
+              <p class="font-judul text-4xl text-emas mt-3" id="hasil-puskesmas">0</p>
+              <p class="text-sm text-kertas/60 mt-1">puskesmas berdiri di daerah terpencil</p>
+            </div>
+            <div class="bg-abu border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all">
+              <p class="text-3xl">🍱</p>
+              <p class="font-judul text-4xl text-emas mt-3" id="hasil-makan">0</p>
+              <p class="text-sm text-kertas/60 mt-1">porsi makan bergizi untuk anak sekolah</p>
+            </div>
+            <div class="sm:col-span-2 bg-gradient-to-r from-bara to-darah text-abu rounded-2xl p-6 flex items-center gap-5">
+              <p class="text-4xl">🎓</p>
+              <div>
+                <p class="font-judul text-4xl" id="hasil-beasiswa">0</p>
+                <p class="text-sm font-medium">anak muda bisa kuliah sampai lulus — gratis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         10. ERA DIGITAL — jejak digital tak bisa dibakar
+         ===================================================== -->
+    <section id="digital" class="relative py-24 md:py-32">
+      <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-14 items-center">
+        <div>
+          <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">07 / ERA DIGITAL</p>
+          <h2 class="reveal font-judul uppercase text-5xl md:text-7xl">Kertas bisa dibakar. <span class="teks-api">Jejak digital tidak.</span></h2>
+          <p class="reveal mt-6 text-kertas/70 text-lg leading-relaxed">
+            Dulu bukti bisa hilang di lemari arsip. Sekarang setiap transfer, unggahan, dan pesan meninggalkan jejak.
+            Teknologi yang dipakai untuk menyembunyikan, bisa juga dipakai untuk membongkar.
+          </p>
+
+          <div class="mt-10 space-y-4">
+            <div class="reveal dari-kiri flex gap-4 bg-arang border border-debu rounded-2xl p-5 hover:border-bara transition-colors">
+              <span class="text-3xl">🕵️</span>
+              <div>
+                <h3 class="font-bold text-lg">Netizen jadi detektif</h3>
+                <p class="text-sm text-kertas/60">Foto mobil mewah, tas bermerek, dan liburan pejabat dicocokkan dengan gaji dan laporan hartanya.</p>
+              </div>
+            </div>
+            <div class="reveal dari-kiri flex gap-4 bg-arang border border-debu rounded-2xl p-5 hover:border-bara transition-colors" style="transition-delay:.1s">
+              <span class="text-3xl">📂</span>
+              <div>
+                <h3 class="font-bold text-lg">Harta pejabat bisa dicek</h3>
+                <p class="text-sm text-kertas/60">Ringkasan LHKPN (Laporan Harta Kekayaan Penyelenggara Negara) diumumkan KPK dan bisa dilihat publik.</p>
+              </div>
+            </div>
+            <div class="reveal dari-kiri flex gap-4 bg-arang border border-debu rounded-2xl p-5 hover:border-bara transition-colors" style="transition-delay:.2s">
+              <span class="text-3xl">⚠️</span>
+              <div>
+                <h3 class="font-bold text-lg">Tapi: “No viral, no justice”?</h3>
+                <p class="text-sm text-kertas/60">Keadilan tidak boleh menunggu trending. Dan kritik harus berbasis data, bukan hoaks atau fitnah.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup HP: notifikasi muncul satu per satu -->
+        <div class="reveal zoom flex justify-center">
+          <div id="hp" class="relative w-[300px] sm:w-[340px] h-[600px] bg-arang border-[10px] border-debu rounded-[3rem] p-5 shadow-[0_0_80px_rgba(255,77,26,.25)] overflow-hidden">
+            <div class="mx-auto w-28 h-6 bg-debu rounded-full mb-6"></div>
+            <p class="text-center font-judul text-5xl">23:59</p>
+            <p class="text-center text-xs text-kertas/50 mb-6">Notifikasi</p>
+
+            <div id="daftar-notif" class="space-y-3">
+              <div class="notif opacity-0 translate-y-6 transition-all duration-500 bg-kertas/10 backdrop-blur rounded-2xl p-3">
+                <p class="text-[11px] text-kertas/50">🏦 M-BANKING · baru saja</p>
+                <p class="text-sm font-bold">Dana masuk Rp 500.000.000</p>
+                <p class="text-xs text-kertas/60">Berita: “uang terima kasih proyek”</p>
+              </div>
+              <div class="notif opacity-0 translate-y-6 transition-all duration-500 bg-kertas/10 backdrop-blur rounded-2xl p-3">
+                <p class="text-[11px] text-kertas/50">💬 CHAT · 1 mnt</p>
+                <p class="text-sm font-bold">Vendor A</p>
+                <p class="text-xs text-kertas/60">“Sudah ditransfer ya pak, aman 🙏”</p>
+              </div>
+              <div class="notif opacity-0 translate-y-6 transition-all duration-500 bg-kertas/10 backdrop-blur rounded-2xl p-3">
+                <p class="text-[11px] text-kertas/50">📸 MEDSOS · 2 mnt</p>
+                <p class="text-sm font-bold">@anak_pejabat mengunggah foto</p>
+                <p class="text-xs text-kertas/60">“Mobil baru dari papa ✨ #blessed”</p>
+              </div>
+              <div class="notif opacity-0 translate-y-6 transition-all duration-500 bg-kertas/10 backdrop-blur rounded-2xl p-3">
+                <p class="text-[11px] text-kertas/50">🔥 TRENDING · 5 mnt</p>
+                <p class="text-sm font-bold">#UsutHartaPejabat</p>
+                <p class="text-xs text-kertas/60">48.2 rb unggahan</p>
+              </div>
+            </div>
+
+            <!-- Stempel -->
+            <div id="stempel" class="stempel absolute inset-x-6 top-1/2 -translate-y-1/2 border-4 border-bara text-bara rounded-xl py-4 text-center font-judul text-3xl uppercase bg-abu/80 backdrop-blur-sm">
+              Jejak tersimpan<br>selamanya
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         11. KUIS — korupsi atau bukan?
+         ===================================================== -->
+    <section id="kuis" class="relative py-24 md:py-32 bg-arang">
+      <div class="max-w-3xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-12">
+          <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-4">08 / UJI KEPEKAAN</p>
+          <h2 class="reveal font-judul uppercase text-5xl md:text-7xl">Korupsi <span class="teks-api">atau bukan?</span></h2>
+          <p class="reveal mt-4 text-kertas/60">Korupsi sering dimulai dari hal yang dianggap “wajar”. Seberapa peka kamu?</p>
+        </div>
+
+        <div id="kotak-kuis" class="reveal zoom bg-abu border border-debu rounded-3xl p-6 md:p-10">
+          <!-- Isi kuis dibuat oleh script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         12. BERTINDAK — ikrar & kanal pelaporan
+         ===================================================== -->
+    <section id="bertindak" class="relative py-28 md:py-40 overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-abu via-darah/30 to-abu pointer-events-none"></div>
+      <div class="relative max-w-5xl mx-auto px-5 md:px-8 text-center">
+        <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-6">09 / BERTINDAK</p>
+        <h2 class="reveal font-judul uppercase text-5xl sm:text-6xl md:text-8xl leading-[.95]">
+          Bakar kebiasaannya.<br><span class="teks-api">Bukan harapannya.</span>
+        </h2>
+        <p class="reveal mt-8 text-lg text-kertas/70 max-w-2xl mx-auto">
+          Budaya diwariskan lewat kebiasaan kecil. Maka memutusnya pun dimulai dari keputusan kecil: menolak amplop pertama.
+        </p>
+
+        <!-- Ikrar -->
+        <form id="form-ikrar" class="reveal mt-12 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+          <input id="nama-ikrar" type="text" maxlength="30" placeholder="Tulis namamu (boleh dikosongkan)"
+                 class="flex-1 bg-arang border-2 border-debu rounded-full px-6 py-4 outline-none focus:border-bara transition-colors placeholder:text-kertas/30">
+          <button id="tombol-ikrar" type="submit" class="denyut bg-bara text-abu font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-emas hover:scale-105 transition-all">
+            Aku Menolak 🔥
+          </button>
+        </form>
+
+        <!-- Kartu ikrar (muncul setelah submit) -->
+        <div id="kartu-ikrar" class="hidden mt-10 max-w-md mx-auto kertas rounded-2xl p-8 text-left rotate-[-2deg] shadow-2xl">
+          <p class="font-ketik text-xs tracking-widest opacity-60">IKRAR GENERASI DIGITAL</p>
+          <p class="font-judul text-3xl uppercase mt-3">Saya, <span id="nama-di-kartu" class="text-darah">Warga Indonesia</span>,</p>
+          <p class="font-ketik mt-3 leading-relaxed">
+            menolak memberi dan menerima suap, sekecil apa pun namanya. Warisan ini berhenti di tangan saya.
+          </p>
+          <p class="font-ketik text-xs mt-6 opacity-60" id="tanggal-ikrar"></p>
+        </div>
+
+        <!-- Kanal pelaporan -->
+        <div class="grid sm:grid-cols-3 gap-4 mt-20 text-left">
+          <div class="reveal bg-arang/80 border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all">
+            <p class="font-judul text-5xl text-bara">198</p>
+            <p class="font-bold mt-2">Call Center KPK</p>
+            <p class="text-sm text-kertas/60">Untuk informasi dan pengaduan dugaan korupsi.</p>
+          </div>
+          <a href="https://kws.kpk.go.id" target="_blank" rel="noopener" class="reveal block bg-arang/80 border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all" style="transition-delay:.1s">
+            <p class="font-judul text-3xl text-bara">KWS KPK ↗</p>
+            <p class="font-bold mt-2">Whistleblower System</p>
+            <p class="text-sm text-kertas/60">Lapor secara daring, identitas pelapor dirahasiakan.</p>
+          </a>
+          <a href="https://jaga.id" target="_blank" rel="noopener" class="reveal block bg-arang/80 border border-debu rounded-2xl p-6 hover:border-bara hover:-translate-y-1 transition-all" style="transition-delay:.2s">
+            <p class="font-judul text-3xl text-bara">JAGA.ID ↗</p>
+            <p class="font-bold mt-2">Pantau Layanan Publik</p>
+            <p class="text-sm text-kertas/60">Awasi sekolah, puskesmas, dan dana desa di sekitarmu.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         12b. KREATOR — profil pembuat website
+         ===================================================== -->
+    <section id="kreator" class="relative min-h-screen flex items-center justify-center overflow-hidden py-24">
+      <canvas class="kanvas-api absolute inset-x-0 bottom-0 w-full h-[65%] pointer-events-none" data-tinggi="0.85"></canvas>
+      <div class="cahaya-api absolute inset-0 pointer-events-none"></div>
+
+      <div class="relative z-10 w-full max-w-2xl px-5">
+        <p class="reveal font-ketik text-bara tracking-[.3em] text-sm mb-6 text-center">10 / DI BALIK LAYAR</p>
+
+        <!-- Bingkai kartu berputar seperti lidah api -->
+        <div class="reveal zoom kartu-kreator rounded-3xl p-[3px]">
+          <div class="bg-abu/90 backdrop-blur-md rounded-[1.4rem] p-7 md:p-10">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+              <div class="avatar-api shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-full grid place-items-center text-4xl md:text-5xl">🔥</div>
+              <div>
+                <p class="font-ketik text-xs tracking-[.3em] text-emas">KREATOR</p>
+                <h2 class="font-judul uppercase text-3xl md:text-5xl leading-[1.05] mt-1">Komang Gede Bayu Sefti Wiguna</h2>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-8">
+              <div class="bg-arang border border-debu rounded-2xl p-4 hover:border-bara hover:-translate-y-1 transition-all">
+                <p class="text-[10px] md:text-xs uppercase tracking-widest text-kertas/50">Kelas</p>
+                <p class="font-judul text-xl md:text-3xl text-bara mt-1">XII RPL 2</p>
+              </div>
+              <div class="bg-arang border border-debu rounded-2xl p-4 hover:border-bara hover:-translate-y-1 transition-all">
+                <p class="text-[10px] md:text-xs uppercase tracking-widest text-kertas/50">No. Presensi</p>
+                <p class="font-judul text-xl md:text-3xl text-bara mt-1">24</p>
+              </div>
+              <div class="bg-arang border border-debu rounded-2xl p-4 hover:border-bara hover:-translate-y-1 transition-all">
+                <p class="text-[10px] md:text-xs uppercase tracking-widest text-kertas/50">NIS</p>
+                <p class="font-judul text-xl md:text-3xl text-bara mt-1">7084</p>
+              </div>
+            </div>
+
+            <p class="font-ketik text-kertas/70 mt-8 pt-6 border-t border-debu">
+              “Website ini dibuat untuk tugas <span class="text-emas">Jejak Budaya di Era Digital</span>. Warisan korupsi harus berhenti di generasi kita.”
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================
+       13. FOOTER
+       ===================================================== -->
+  <footer class="border-t border-debu py-14">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 grid md:grid-cols-3 gap-10 text-sm">
+      <div>
+        <p class="font-judul text-3xl">JEJAK<span class="text-bara">.</span></p>
+        <p class="text-kertas/50 mt-3">Jejak Budaya di Era Digital — sebuah kritik terhadap warisan korupsi dari masa ke masa.</p>
+      </div>
+      <div>
+        <p class="font-bold uppercase tracking-widest text-xs text-bara mb-3">Rujukan</p>
+        <ul class="space-y-1 text-kertas/50">
+          <li>Transparency International — Corruption Perceptions Index</li>
+          <li>KPK — Anti-Corruption Learning Center (aclc.kpk.go.id)</li>
+          <li>Multatuli — <em>Max Havelaar</em> (1860)</li>
+          <li>M.C. Ricklefs — <em>Sejarah Indonesia Modern</em></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-bold uppercase tracking-widest text-xs text-bara mb-3">Catatan</p>
+        <p class="text-kertas/50">Angka kerugian negara mengikuti perhitungan yang diberitakan saat persidangan dan dapat berbeda antarsumber. Kritik ditujukan pada sistem dan perilaku, bukan untuk menyebar kebencian.</p>
+      </div>
+    </div>
+    <p class="text-center text-kertas/30 text-xs mt-12">Musik latar: Feast — “Peradaban”<br>© 2026 · Dibuat oleh Komang Gede Bayu Sefti Wiguna · XII RPL 2</p>
+  </footer>
+
+  <!-- Lightbox: poster diperbesar -->
+  <div id="lightbox" class="fixed inset-0 z-[95] bg-abu/95 backdrop-blur-sm hidden items-center justify-center p-4 cursor-zoom-out">
+    <img src="img/poster-satir.jpg" alt="Poster satir diperbesar" class="max-h-full max-w-full rounded-2xl shadow-[0_0_80px_rgba(255,77,26,.35)]">
+    <button class="absolute top-5 right-5 w-12 h-12 rounded-full bg-bara text-abu text-2xl font-bold" aria-label="Tutup">✕</button>
+  </div>
+
+  <!-- Pemutar musik latar -->
+  <audio id="musik" src="audio/feast-peradaban.mp3" loop preload="auto"></audio>
+  <button id="tombol-musik" type="button" class="fixed bottom-6 left-6 z-40 flex items-center gap-3 bg-abu/85 backdrop-blur-md border-2 border-kertas/70 text-kertas rounded-full pl-4 pr-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,.7)] hover:border-emas hover:scale-105 transition-all" aria-label="Putar atau jeda musik">
+    <span class="ekualizer flex items-end gap-[3px] h-5 w-5">
+      <span></span><span></span><span></span><span></span>
+    </span>
+    <span class="text-left leading-tight">
+      <span id="status-musik" class="block text-[10px] uppercase tracking-widest text-emas">Putar lagu</span>
+      <span class="hidden sm:block text-sm font-bold">Feast — Peradaban</span>
+    </span>
+  </button>
+
+  <!-- Tombol kembali ke atas -->
+  <a href="#beranda" id="tombol-atas" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-bara text-abu text-2xl font-bold grid place-items-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-emas hover:scale-110" aria-label="Kembali ke atas">↑</a>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
